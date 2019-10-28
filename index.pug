@@ -1,0 +1,21 @@
+doctype
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title Quick-Cal
+  body
+    form
+      label Start date
+        input(type="date",name="s")
+      label End date
+        input(type="date",name="e")
+      label Week start
+        select(name="ws")
+          option(value="m") Monday
+          option(value="tu") Tuesday
+          option(value="w") Wednesday
+          option(value="th") Thusday
+          option(value="f") Friday
+          option(value="sa") Saturday
+          option(value="su") Sunday
+      input(type="submit",value="Generate")

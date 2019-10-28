@@ -20,9 +20,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build
+    - name: npx pug
       run: |
-        npm ci
-        npm run build
+        npx pug **/*.pug --out public
       env:
         CI: true

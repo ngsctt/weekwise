@@ -4,7 +4,7 @@
   "description": "Quickly generate an HTML calendar",
   "main": "index.html",
   "scripts": {
-    "test": "pug **/*.pug -out public"
+    "build": "pug **/*.pug -out public"
   },
   "repository": {
     "type": "git",

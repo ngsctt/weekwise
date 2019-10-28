@@ -5,7 +5,7 @@ html(lang='en')
     title Quick-Cal
   body
     h1 Generate a calendar
-    form(action="/g")
+    form(action="/g")#form
       label Start date
         input(type="date", name="s", value="2019-10-28")
       label End date
@@ -20,3 +20,10 @@ html(lang='en')
           option(value="6") Saturday
           option(value="0") Sunday
       input(type="submit",value="Generate")
+
+  script.
+    const form = document.getElementById('form');
+    const url = new URL(window.location);
+    dest = url.pathname.split('/');
+    dest.pop();
+    form.action = [...dest, 'g'].join('/');

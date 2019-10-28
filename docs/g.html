@@ -201,5 +201,5 @@ tbody.addEventListener('keydown', event => {
 const credits = document.getElementById('credits');
 const pathArr = url.pathname.split('/');
 pathArr.pop();
-const path = pathArr.join('/') !== "" ? [url.origin, ...path].join('/') : url.origin;
+const path = pathArr.join('/') !== "" ? [url.origin, ...pathArr].join('/') : url.origin;
 credits.textContent = "made with " + path;</script></body></html>

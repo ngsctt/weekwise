@@ -1,0 +1,226 @@
+doctype
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title Quick-Cal
+  style.
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      height: 100%;
+      font-family: sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: .5rem;
+      height: 100%;
+      display: grid;
+      grid-template-rows: 1fr auto;
+    }
+    .calendar {
+      width: 100%;
+      height: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      border: thin solid black;
+    }
+    .calendar thead,
+    .calendar tbody,
+    .calendar tr,
+    .calendar td,
+    .calendar th {
+      border: inherit;
+    }
+    .calendar td {
+      vertical-align: top;
+      max-height: 15vw;
+    }
+    .calendar th {
+      padding: .25rem;
+    }
+    .empty {
+      background-color: grey;
+      background-image: repeating-linear-gradient(-45deg, transparent, transparent 0.08rem, white 0.08rem, white 0.42rem);
+    }
+    .container {
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      padding: .25rem;
+    }
+    .container time {
+      text-align: right;
+    }
+    time .mnth {
+      float: left;
+    }
+    .contents {
+      margin: 0;
+      margin-block-start: .5rem;
+    }
+    #credits {
+      font-size: .8rem;
+      margin: 0;
+      margin-block-start: .25rem;
+      text-align: right;
+    }
+
+  body
+    table.calendar
+      thead
+        tr
+          th#title(colspan=7) Calendar
+        tr
+          each d in [0,1,2,3,4,5,6]
+            th.dayname(data-position=d) &nbsp;
+      tbody#tbody
+    p#credits
+
+    script(src="https://unpkg.com/dayjs")
+    script(src="https://unpkg.com/dayjs/plugin/dayOfYear")
+    script.
+      const url = new URL(window.location);
+      const qp = url.searchParams;
+      const s = qp.get('s');
+      const e = qp.get('e');
+      const wks = qp.get('ws');
+
+      const locale = {
+        name: 'custom',
+        weekStart: wks,
+        weekdays: 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_'),
+        weekdaysShort: 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_'),
+        weekdaysMin: 'Su_M_Tu_W_Th_F_Sa'.split('_'),
+        months: 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_'),
+        monthsShort: 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_'),
+        ordinal: n => `${n}º`, // ordinal Function (number) => return number + output
+        formats: {
+          // abbreviated format options allowing localization
+          LTS: 'h:mm:ss A',
+          LT: 'h:mm A',
+          L: 'MM/DD/YYYY',
+          LL: 'MMMM D, YYYY',
+          LLL: 'MMMM D, YYYY h:mm A',
+          LLLL: 'dddd, MMMM D, YYYY h:mm A',
+          // lowercase/short, optional formats for localization
+          l: 'D/M/YYYY',
+          ll: 'D MMM, YYYY',
+          lll: 'D MMM, YYYY h:mm A',
+          llll: 'ddd, MMM D, YYYY h:mm A'
+        },
+        relativeTime: {
+          // relative time format strings, keep %s %d as the same
+          future: 'in %s', // e.g. in 2 hours, %s been replaced with 2hours
+          past: '%s ago',
+          s: 'a few seconds',
+          m: 'a minute',
+          mm: '%d minutes',
+          h: 'an hour',
+          hh: '%d hours', // e.g. 2 hours, %d been replaced with 2
+          d: 'a day',
+          dd: '%d days',
+          M: 'a month',
+          MM: '%d months',
+          y: 'a year',
+          yy: '%d years'
+        },
+        meridiem: (hour, minute, isLowercase) => {
+          // OPTIONAL, AM/PM
+          return hour > 12 ? 'PM' : 'AM'
+        }
+      }
+      dayjs.locale(locale);
+      dayjs.extend(dayjs_plugin_dayOfYear)
+
+      const start = dayjs(s);
+      const end = dayjs(e);
+      const wStart = start.startOf('week');
+      const wEnd = end.endOf('week');
+      const nDays = wEnd.diff(wStart, 'days') + 1;
+
+      var rows = []
+      var rowStaging = [];
+      for (i=0; i < nDays; i++) {
+        let thisDay = wStart.add(i, 'day');
+        if (thisDay.diff(start, 'days') >= 0 && thisDay.diff(end, 'days') <= 0) rowStaging.push(thisDay);
+        else rowStaging.push("");
+        if (thisDay.isSame(thisDay.endOf('week'), 'date')) {
+          rows.push(rowStaging);
+          rowStaging = [];
+        }
+      }
+
+      const tbody = document.getElementById('tbody');
+
+      rows.forEach(row => {
+        let tr = document.createElement('tr');
+        row.forEach(cell => {
+          let td = document.createElement('td');
+          if (cell.date) {
+            let container = document.createElement('div');
+            container.classList.add('container');
+            let date = document.createElement('time');
+            date.dateTime = cell.toISOString();
+            let theDay = document.createElement('span');
+            theDay.textContent = cell.date();
+            if (cell.diff(start, 'days') === 0 || cell.diff(cell.startOf('month'), 'days') === 0) {
+              let theMonth = document.createElement('span');
+              theMonth.textContent += cell.format('MMMM') + " ";
+              theMonth.classList.add('mnth')
+              date.appendChild(theMonth);
+            }
+            date.appendChild(theDay);
+            let contents = document.createElement('div');
+            contents.classList.add('contents')
+            contents.contentEditable = true;
+            container.appendChild(date);
+            container.appendChild(contents);
+            td.appendChild(container);
+          }
+          else td.classList.add('empty');
+          tr.appendChild(td);
+        })
+        tr.style.height = Math.floor(100 / rows.length) + "%";
+        tbody.appendChild(tr);
+      })
+
+      const dayHeaders = document.querySelectorAll('.dayname');
+      const dayNames = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ]
+      console.log(dayHeaders);
+      dayHeaders.forEach(h => {
+        let pos = Number(h.dataset.position) + Number(wks);
+        if (pos > 6) pos = pos - 7;
+        console.log(pos)
+        h.textContent = dayNames[pos];
+      })
+
+      const title = document.getElementById('title');
+      title.textContent = start.format('dddd D MMMM, YYYY') + " 〜 " + end.format('dddd D MMMM, YYYY');
+
+      const specialKey = navigator.userAgent.indexOf('Macintosh') != -1 ? "metaKey" : "ctrlKey";
+      function formatText (event, key, command) {
+        if (event.code === key && event[specialKey] === true) {
+          document.execCommand(command, false, null);
+          event.preventDefault();
+        }
+      }
+      tbody.addEventListener('keydown', event => {
+        formatText(event, 'KeyB', 'bold');
+        formatText(event, 'KeyI', 'italic');
+        formatText(event, 'KeyU', 'underline');
+      })
+
+      const credits = document.getElementById('credits');
+      const pathArr = url.pathname.split('/');
+      pathArr.pop();
+      const path = pathArr.join('/') !== "" ? [url.origin, ...path].join('/') : url.origin;
+      credits.textContent = "made with " + path;

@@ -4,13 +4,16 @@
   "description": "Quickly generate an HTML calendar",
   "main": "index.html",
   "scripts": {
-    "build": "pug **/*.pug -out public"
+    "build": "pug `find . -type f -name '*.pug'` --out public",
+    "serve": "light-server -s public -w \"**/*.pug # npm run build\"",
+    "test": "npm run build && npm run serve"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ngsctt/quick-cal.git"
   },
   "dependencies": {
+    "light-server": "^2.6.4",
     "pug": "^2.0.4"
   },
   "author": "Nathan Scott",

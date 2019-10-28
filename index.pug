@@ -4,18 +4,19 @@ html(lang='en')
     meta(charset='utf-8')
     title Quick-Cal
   body
-    form
+    h1 Generate a calendar
+    form(action="/g")
       label Start date
-        input(type="date",name="s")
+        input(type="date", name="s", value="2019-10-28")
       label End date
-        input(type="date",name="e")
+        input(type="date", name="e", value="2019-11-10")
       label Week start
         select(name="ws")
-          option(value="m") Monday
-          option(value="tu") Tuesday
-          option(value="w") Wednesday
-          option(value="th") Thusday
-          option(value="f") Friday
-          option(value="sa") Saturday
-          option(value="su") Sunday
+          option(value="1", selected=true) Monday
+          option(value="2") Tuesday
+          option(value="3") Wednesday
+          option(value="4") Thusday
+          option(value="5") Friday
+          option(value="6") Saturday
+          option(value="0") Sunday
       input(type="submit",value="Generate")

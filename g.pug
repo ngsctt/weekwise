@@ -222,5 +222,6 @@ html(lang='en')
       const credits = document.getElementById('credits');
       const pathArr = url.pathname.split('/');
       pathArr.pop();
-      const path = pathArr.join('/') !== "" ? [url.origin, ...pathArr].join('/') : url.origin;
+      if (pathArr[0] === "") pathArr.shift();
+      const path = [url.origin, ...pathArr].join('/');
       credits.textContent = "made with " + path;

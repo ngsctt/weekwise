@@ -1,0 +1,19 @@
+{
+  "name": "quick-cal",
+  "version": "0.1.0",
+  "description": "Quickly generate an HTML calendar",
+  "main": "index.html",
+  "scripts": {
+    "test": "pug **/*.pug -out public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngsctt/quick-cal.git"
+  },
+  "author": "Nathan Scott",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngsctt/quick-cal/issues"
+  },
+  "homepage": "https://github.com/ngsctt/quick-cal#readme"
+}

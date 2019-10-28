@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/ngsctt/quick-cal.git"
   },
+  "dependencies": {
+    "pug": "^2.0.4"
+  },
   "author": "Nathan Scott",
   "license": "MIT",
   "bugs": {

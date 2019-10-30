@@ -53,7 +53,7 @@ footer {
 }
 </style></head><body><main><h1>Generate a calendar</h1><form action="g" id="form"><label class="blk">Start date<input type="date" name="s" value="2019-10-28"><input type="button" value="Today" id="btn-today"></label><div class="grid2"><label><input id="opt-duration" form="fakeForm" type="radio" name="method" checked>Duration</label><label><input id="opt-end" form="fakeForm" type="radio" name="method">End Date</label></div><label class="blk js-duration">Duration<input class="js-duration" id="inp-dl" type="number" name="d" value="1"><select class="js-duration" name="du" id="inp-du"><option value="d">Day</option><option value="w" selected>Week</option><option value="m">Month</option></select></label><label class="blk js-end is-disab">End date<input class="js-end is-disab" id="inp-end" type="date" name="e" disabled></label><fieldset class="grid4"><legend>Presets</legend><input class="js-btn-month" type="button" data-month="0" value="January"><input class="js-btn-month" type="button" data-month="1" value="February"><input class="js-btn-month" type="button" data-month="2" value="March"><input class="js-btn-month" type="button" data-month="3" value="April"><input class="js-btn-month" type="button" data-month="4" value="May"><input class="js-btn-month" type="button" data-month="5" value="June"><input class="js-btn-month" type="button" data-month="6" value="July"><input class="js-btn-month" type="button" data-month="7" value="August"><input class="js-btn-month" type="button" data-month="8" value="September"><input class="js-btn-month" type="button" data-month="9" value="October"><input class="js-btn-month" type="button" data-month="10" value="November"><input class="js-btn-month" type="button" data-month="11" value="December"></fieldset><label class="blk">Week start<select name="ws"><option value="" selected>(Auto)</option><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thusday</option><option value="5">Friday</option><option value="6">Saturday</option><option value="0">Sunday</option></select></label><div class="aln-R"><input type="reset" value="Reset"><input type="submit" value="Generate"></div></form><footer><small>Sourcecode available on <a href="https://github.com/ngsctt/weekwise#readme">GitHub</a>.</small></footer></main><script src="dayjs.min.js"></script><script>const start = document.getElementsByName('s')[0];
 start.defaultValue = dayjs().format('YYYY-MM-DD');
-const method = Array.from(document.getElementsByName('method'));
+const method = document.getElementsByName('method');
 const durInputs = Array.from(document.getElementsByClassName('js-duration'));
 const endInputs = Array.from(document.getElementsByClassName('js-end'));
 const end = document.getElementById('inp-end');
@@ -67,30 +67,31 @@ const units = {
 }
 const todayButton = document.getElementById('btn-today');
 const monthButtons = document.getElementsByClassName('js-btn-month');
-document.addEventListener('change', event => {
-  if (method.indexOf(event.target) > -1) {
-    if (document.getElementById('opt-duration').checked) {
-      durInputs.forEach(e => {
-        e.disabled = false
-        e.classList.remove('is-disab')
-      });
-      endInputs.forEach(e => {
-        e.disabled = true
-        e.classList.add('is-disab')
-      });
-      end.value = "";
-    } else {
-      durInputs.forEach(e => {
-        e.disabled = true
-        e.classList.add('is-disab')
-      });
-      endInputs.forEach(e => {
-        e.disabled = false
-        e.classList.remove('is-disab')
-      });
-      if (end.value === "") end.value = dayjs(start.value).add(dl.value, units[du.value]).subtract(1, 'day').format('YYYY-MM-DD');
-    }
+function methodCheck () {
+  if (document.getElementById('opt-duration').checked) {
+    durInputs.forEach(e => {
+      e.disabled = false
+      e.classList.remove('is-disab')
+    });
+    endInputs.forEach(e => {
+      e.disabled = true
+      e.classList.add('is-disab')
+    });
+    end.value = "";
+  } else {
+    durInputs.forEach(e => {
+      e.disabled = true
+      e.classList.add('is-disab')
+    });
+    endInputs.forEach(e => {
+      e.disabled = false
+      e.classList.remove('is-disab')
+    });
+    if (end.value === "") end.value = dayjs(start.value).add(dl.value, units[du.value]).subtract(1, 'day').format('YYYY-MM-DD');
   }
+}
+document.addEventListener('change', event => {
+  if (Array.from(method).indexOf(event.target) > -1) methodCheck()
 })
 todayButton.addEventListener('click', event => start.value = dayjs().format('YYYY-MM-DD'));
 Array.from(monthButtons).forEach(button => {
@@ -101,5 +102,7 @@ Array.from(monthButtons).forEach(button => {
     du.value = 'm';
     du.value = 'm';
     wks.value = 1;
+    document.getElementById('opt-duration').checked = true;
+    methodCheck(); 
   })
 });</script></body></html>

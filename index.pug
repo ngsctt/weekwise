@@ -117,7 +117,7 @@ html(lang='en')
     script.
       const start = document.getElementsByName('s')[0];
       start.defaultValue = dayjs().format('YYYY-MM-DD');
-      const method = Array.from(document.getElementsByName('method'));
+      const method = document.getElementsByName('method');
       const durInputs = Array.from(document.getElementsByClassName('js-duration'));
       const endInputs = Array.from(document.getElementsByClassName('js-end'));
       const end = document.getElementById('inp-end');
@@ -131,30 +131,31 @@ html(lang='en')
       }
       const todayButton = document.getElementById('btn-today');
       const monthButtons = document.getElementsByClassName('js-btn-month');
-      document.addEventListener('change', event => {
-        if (method.indexOf(event.target) > -1) {
-          if (document.getElementById('opt-duration').checked) {
-            durInputs.forEach(e => {
-              e.disabled = false
-              e.classList.remove('is-disab')
-            });
-            endInputs.forEach(e => {
-              e.disabled = true
-              e.classList.add('is-disab')
-            });
-            end.value = "";
-          } else {
-            durInputs.forEach(e => {
-              e.disabled = true
-              e.classList.add('is-disab')
-            });
-            endInputs.forEach(e => {
-              e.disabled = false
-              e.classList.remove('is-disab')
-            });
-            if (end.value === "") end.value = dayjs(start.value).add(dl.value, units[du.value]).subtract(1, 'day').format('YYYY-MM-DD');
-          }
+      function methodCheck () {
+        if (document.getElementById('opt-duration').checked) {
+          durInputs.forEach(e => {
+            e.disabled = false
+            e.classList.remove('is-disab')
+          });
+          endInputs.forEach(e => {
+            e.disabled = true
+            e.classList.add('is-disab')
+          });
+          end.value = "";
+        } else {
+          durInputs.forEach(e => {
+            e.disabled = true
+            e.classList.add('is-disab')
+          });
+          endInputs.forEach(e => {
+            e.disabled = false
+            e.classList.remove('is-disab')
+          });
+          if (end.value === "") end.value = dayjs(start.value).add(dl.value, units[du.value]).subtract(1, 'day').format('YYYY-MM-DD');
         }
+      }
+      document.addEventListener('change', event => {
+        if (Array.from(method).indexOf(event.target) > -1) methodCheck()
       })
       todayButton.addEventListener('click', event => start.value = dayjs().format('YYYY-MM-DD'));
       Array.from(monthButtons).forEach(button => {
@@ -165,5 +166,7 @@ html(lang='en')
           du.value = 'm';
           du.value = 'm';
           wks.value = 1;
+          document.getElementById('opt-duration').checked = true;
+          methodCheck(); 
         })
       });

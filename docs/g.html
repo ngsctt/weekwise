@@ -57,12 +57,12 @@ time .mnth {
   text-align: center;
 }
 #credits {
+  display: block;
   font-size: .8rem;
-  margin: 0;
   margin-block-start: .25rem;
   text-align: right;
 }
-</style><body><table class="calendar"><thead><tr><th id="title" colspan="7">Calendar</th></tr><tr><th class="dayname" data-position="0">&nbsp;</th><th class="dayname" data-position="1">&nbsp;</th><th class="dayname" data-position="2">&nbsp;</th><th class="dayname" data-position="3">&nbsp;</th><th class="dayname" data-position="4">&nbsp;</th><th class="dayname" data-position="5">&nbsp;</th><th class="dayname" data-position="6">&nbsp;</th></tr></thead><tbody id="tbody"></tbody></table><p id="credits"></p><script src="dayjs.min.js"></script><script>const url = new URL(window.location);
+</style><body><table class="calendar"><thead><tr><th id="title" colspan="7">Calendar</th></tr><tr><th class="dayname" data-position="0">&nbsp;</th><th class="dayname" data-position="1">&nbsp;</th><th class="dayname" data-position="2">&nbsp;</th><th class="dayname" data-position="3">&nbsp;</th><th class="dayname" data-position="4">&nbsp;</th><th class="dayname" data-position="5">&nbsp;</th><th class="dayname" data-position="6">&nbsp;</th></tr></thead><tbody id="tbody"></tbody></table><small id="credits"></small><script src="dayjs.min.js"></script><script>const url = new URL(window.location);
 const qp = url.searchParams;
 const s = qp.get('s');
 const e = qp.get('e');

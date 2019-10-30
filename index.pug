@@ -55,6 +55,9 @@ html(lang='en')
       label input[type="radio"] {
         margin-inline-end: .5rem;
       }
+      footer {
+        margin-top: 1rem;
+      }
 
   body
     main
@@ -105,6 +108,10 @@ html(lang='en')
         div.aln-R
           input(type="reset",value="Reset")
           input(type="submit",value="Generate")
+      
+      footer
+        if repo
+          small Sourcecode available on #[a(href=repo) GitHub].
 
     script(src="dayjs.min.js")
     script.

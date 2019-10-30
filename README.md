@@ -1,2 +1,2 @@
-# quick-cal
-Quickly generate a calendar
+# weekwise
+Quickly generate a week-by-week calendar

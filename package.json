@@ -1,5 +1,5 @@
 {
-  "name": "quick-cal",
+  "name": "@ngsctt/weekwise",
   "version": "0.1.0",
   "description": "Quickly generate an HTML calendar",
   "main": "index.html",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ngsctt/quick-cal.git"
+    "url": "git+https://github.com/ngsctt/weekwise.git"
   },
   "dependencies": {
     "light-server": "^2.6.4",
@@ -19,7 +19,7 @@
   "author": "Nathan Scott",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ngsctt/quick-cal/issues"
+    "url": "https://github.com/ngsctt/weekwise/issues"
   },
-  "homepage": "https://github.com/ngsctt/quick-cal#readme"
+  "homepage": "https://github.com/ngsctt/weekwise#readme"
 }

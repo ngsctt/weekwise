@@ -3,27 +3,122 @@ html(lang='en')
   head
     meta(charset='utf-8')
     title Quick-Cal
-  body
-    h1 Generate a calendar
-    form(action="/g")#form
-      label Start date
-        input(type="date", name="s", value="2019-10-28")
-      label End date
-        input(type="date", name="e", value="2019-11-10")
-      label Week start
-        select(name="ws")
-          option(value="1", selected) Monday
-          option(value="2") Tuesday
-          option(value="3") Wednesday
-          option(value="4") Thusday
-          option(value="5") Friday
-          option(value="6") Saturday
-          option(value="0") Sunday
-      input(type="submit",value="Generate")
+    style.
+      * {
+        box-sizing: border-box;
+      }
+      main {
+        max-width: 20rem;
+        margin: 0 auto;
+      }
+      label.blk {
+        display: grid;
+        grid-template-rows: auto 2rem;
+      }
+      label.blk input,
+      label.blk select {
+        grid-row: 2/3;
+      }
+      input, select {
+        border: thin solid currentColor;
+        border-radius: .25rem;
+        padding: .25rem .3rem;
+      }
+      .is-disab,
+      :disabled {
+        color: lightgrey;
+      }
+      input[type="submit"] {
+        height: 2rem;
+        display: block;
+        margin-inline-start: auto
+      }
+      form > *:not(:last-child) {
+        margin-block-end: .5rem;
+      }
+      .grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      label input[type="radio"] {
+        margin-inline-end: .5rem;
+      }
 
-  script.
-    const form = document.getElementById('form');
-    const url = new URL(window.location);
-    dest = url.pathname.split('/');
-    dest.pop();
-    form.action = [...dest, 'g'].join('/');
+  body
+    main
+      h1 Generate a calendar
+      form(action="/g")#form
+        label.blk Start date
+          input(type="date", name="s", value="2019-10-28")
+        div.grid2
+          label
+            input(form="fakeForm", type="radio", name="method", checked)#opt-duration
+            | Duration
+          label
+            input(form="fakeForm", type="radio", name="method")#opt-end
+            | End Date
+        label.blk.js-duration Duration
+          input(type="date", name="d", value="1")#inp-dl.js-duration
+          select(name="du")#inp-du.js-duration
+            option(value="d") Day
+            option(value="w", selected) Week
+            option(value="m") Month
+        label.blk.js-end.is-disab End date
+          input(type="date", name="e", disabled)#inp-end.js-end.is-disab
+        label.blk Week start
+          select(name="ws")
+            option(value="", selected) (Auto)
+            option(value="1") Monday
+            option(value="2") Tuesday
+            option(value="3") Wednesday
+            option(value="4") Thusday
+            option(value="5") Friday
+            option(value="6") Saturday
+            option(value="0") Sunday
+        input(type="submit",value="Generate")
+
+    script(src="/dayjs.min.js")
+    script.
+      const form = document.getElementById('form');
+      const url = new URL(window.location);
+      dest = url.pathname.split('/');
+      dest.pop();
+      form.action = [...dest, 'g'].join('/');
+      const start = document.getElementsByName('s')[0];
+      start.value = dayjs().format('YYYY-MM-DD');
+      const method = Array.from(document.getElementsByName('method'));
+      const durInputs = Array.from(document.getElementsByClassName('js-duration'));
+      const endInputs = Array.from(document.getElementsByClassName('js-end'));
+      const end = document.getElementById('inp-end');
+      const du = document.getElementById('inp-du');
+      const dl = document.getElementById('inp-dl');
+      const units = {
+        d: 'days',
+        w: 'weeks',
+        m: 'months'
+      }
+      document.addEventListener('change', event => {
+        if (method.indexOf(event.target) > -1) {
+          if (document.getElementById('opt-duration').checked) {
+            durInputs.forEach(e => {
+              e.disabled = false
+              e.classList.remove('is-disab')
+            });
+            endInputs.forEach(e => {
+              e.disabled = true
+              e.classList.add('is-disab')
+            });
+            end.value = "";
+          } else {
+            durInputs.forEach(e => {
+              e.disabled = true
+              e.classList.add('is-disab')
+            });
+            endInputs.forEach(e => {
+              e.disabled = false
+              e.classList.remove('is-disab')
+            });
+            if (end.value === "") end.value = dayjs(start.value).add(dl.value, units[du.value]).subtract(1, 'day').format('YYYY-MM-DD');
+          }
+        }
+      })

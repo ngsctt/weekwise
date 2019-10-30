@@ -40,8 +40,9 @@ html(lang='en')
       padding: .25rem;
     }
     .empty {
-      background-color: grey;
-      background-image: repeating-linear-gradient(-45deg, transparent, transparent 0.08rem, white 0.08rem, white 0.42rem);
+      background-color: lightgrey;
+      //- background-color: grey;
+      //- background-image: repeating-linear-gradient(-45deg, transparent, transparent 0.08rem, white 0.08rem, white 0.42rem);
     }
     .container {
       height: 100%;
@@ -58,6 +59,7 @@ html(lang='en')
     .contents {
       margin: 0;
       margin-block-start: .5rem;
+      overflow: hidden;
     }
     #credits {
       font-size: .8rem;
@@ -77,15 +79,19 @@ html(lang='en')
       tbody#tbody
     p#credits
 
-    script(src="https://unpkg.com/dayjs")
-    script(src="https://unpkg.com/dayjs/plugin/dayOfYear")
+    script(src="/dayjs.min.js")
     script.
       const url = new URL(window.location);
       const qp = url.searchParams;
       const s = qp.get('s');
       const e = qp.get('e');
-      const wks = qp.get('ws');
+      const d = qp.get('d');
+      const du = qp.get('du');
+      var wks = qp.get('ws');
+      if (!wks) wks = dayjs(s).day();
+      else wks = 1;
 
+      console.log(wks)
       const locale = {
         name: 'custom',
         weekStart: wks,
@@ -131,11 +137,17 @@ html(lang='en')
         }
       }
       dayjs.locale(locale);
-      dayjs.extend(dayjs_plugin_dayOfYear)
 
       const start = dayjs(s);
-      const end = dayjs(e);
+      var end = dayjs(e);
+      const units = {
+        d: "day",
+        w: "week",
+        m: "month"
+      };
+      const durUnit = units[du] || 'weeks';
       const wStart = start.startOf('week');
+      if (!end.isValid() && d) end = start.add(d, durUnit).subtract(1, 'day');
       const wEnd = end.endOf('week');
       const nDays = wEnd.diff(wStart, 'days') + 1;
 
@@ -164,7 +176,7 @@ html(lang='en')
             date.dateTime = cell.toISOString();
             let theDay = document.createElement('span');
             theDay.textContent = cell.date();
-            if (cell.diff(start, 'days') === 0 || cell.diff(cell.startOf('month'), 'days') === 0) {
+            if ((cell.diff(start, 'days') === 0 && start.month() !== end.month()) || cell.diff(cell.startOf('month'), 'days') === 0) {
               let theMonth = document.createElement('span');
               theMonth.textContent += cell.format('MMMM') + " ";
               theMonth.classList.add('mnth')
@@ -195,11 +207,9 @@ html(lang='en')
         "Friday",
         "Saturday"
       ]
-      console.log(dayHeaders);
       dayHeaders.forEach(h => {
         let pos = Number(h.dataset.position) + Number(wks);
         if (pos > 6) pos = pos - 7;
-        console.log(pos)
         h.textContent = dayNames[pos];
       })
 
@@ -207,13 +217,15 @@ html(lang='en')
       title.textContent = start.format('dddd D MMMM, YYYY') + " 〜 " + end.format('dddd D MMMM, YYYY');
 
       const specialKey = navigator.userAgent.indexOf('Macintosh') != -1 ? "metaKey" : "ctrlKey";
+      const otherKeys = ['altGraphKey','altKey','ctrlKey','metaKey','shiftKey'].filter(k => k !== specialKey);
       function formatText (event, key, command) {
-        if (event.code === key && event[specialKey] === true) {
+        if (event.code === key && event[specialKey] === true && !otherKeys.some(k => event[k] === true)) {
           document.execCommand(command, false, null);
           event.preventDefault();
         }
       }
       tbody.addEventListener('keydown', event => {
+        console.log(event);
         formatText(event, 'KeyB', 'bold');
         formatText(event, 'KeyI', 'italic');
         formatText(event, 'KeyU', 'underline');

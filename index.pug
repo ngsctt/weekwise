@@ -47,7 +47,7 @@ html(lang='en')
   body
     main
       h1 Generate a calendar
-      form(action="/g")#form
+      form(action="g")#form
         label.blk Start date
           input(type="date", name="s", value="2019-10-28")
         div.grid2
@@ -77,13 +77,8 @@ html(lang='en')
             option(value="0") Sunday
         input(type="submit",value="Generate")
 
-    script(src="/dayjs.min.js")
+    script(src="dayjs.min.js")
     script.
-      const form = document.getElementById('form');
-      const url = new URL(window.location);
-      dest = url.pathname.split('/');
-      dest.pop();
-      form.action = [...dest, 'g'].join('/');
       const start = document.getElementsByName('s')[0];
       start.value = dayjs().format('YYYY-MM-DD');
       const method = Array.from(document.getElementsByName('method'));

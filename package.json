@@ -13,8 +13,8 @@
     "url": "git+https://github.com/ngsctt/weekwise.git"
   },
   "dependencies": {
-    "light-server": "^2.6.4",
-    "pug": "^2.0.4"
+    "light-server": "^2.7.0",
+    "pug": "3"
   },
   "author": "Nathan Scott",
   "license": "MIT",

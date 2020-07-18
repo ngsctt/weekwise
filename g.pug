@@ -73,7 +73,7 @@ html(lang='en')
     table.calendar
       thead
         tr
-          th#title(colspan=7) Calendar
+          th#title(colspan=7,contenteditable=true) Calendar
         tr
           each d in [0,1,2,3,4,5,6]
             th.dayname(data-position=d) &nbsp;

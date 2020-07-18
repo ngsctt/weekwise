@@ -57,6 +57,10 @@ html(lang='en')
       }
       footer {
         margin-top: 1rem;
+        text-align: center;
+      }
+      footer small {
+        display: block;
       }
 
   body
@@ -111,7 +115,31 @@ html(lang='en')
       
       footer
         if repo
-          small Sourcecode available on #[a(href=repo) GitHub].
+          small Sourcecode available on #[a(href=repo) GitHub].&#32;
+        -
+          function isoTimeStamp(date, options = {}) {
+            console.log(options)
+            let defaults = {
+              date_time: 'T',
+              time_offset: ''
+            }
+            Object.assign(options, Object.assign(defaults, options));
+            console.log(options)
+            const year = date.getFullYear();
+            const month = String(date.getMonth()).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hour = String(date.getHours()).padStart(2, '0');
+            const minute = String(date.getMinutes()).padStart(2, '0');
+            const second = String(date.getSeconds()).padStart(2, '0');
+            const millisecond = String(date.getMilliseconds()).padStart(3, '0');
+            const offset = Number(date.getTimezoneOffset());
+            const offset_sign = offset >= 0 ? '-' : '+';
+            const offset_hour = String(Math.abs(Math.floor(offset / 60))).padStart(2, '0');
+            const offset_minute = String(Math.abs(offset % 60)).padStart(2, '0');
+            return `${year}-${month}-${day}${options.date_time}${hour}:${minute}:${second}.${millisecond}${options.time_offset}${offset_sign}${offset_hour}:${offset_minute}`;
+          }
+          const now = new Date();
+        small= `Last updated ${isoTimeStamp(now, {date_time: ' ', time_offset: ' '})}.`
 
     script(src="dayjs.min.js")
     script.

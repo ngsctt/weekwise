@@ -4,7 +4,7 @@
   "description": "Quickly generate an HTML calendar",
   "main": "index.html",
   "scripts": {
-    "build": "pug `find . -type f -name '*.pug'` --out docs --obj `echo '{\"repo\":\"'$npm_package_homepage'\"}'`",
+    "build": "pug $(find . -type f -name '*.pug') --out docs --obj $(echo '{\"repo\":\"'$npm_package_homepage'\"}')",
     "serve": "light-server -s docs -w \"**/*.pug # npm run build\"",
     "test": "npm run build && npm run serve"
   },
